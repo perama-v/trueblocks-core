@@ -5,7 +5,10 @@ package scrapePkg
 // be found in the LICENSE file.
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"strconv"
 	"sync"
 
 	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/logger"
@@ -37,6 +40,19 @@ func (opts *ScrapeOptions) RunIndexScraper(wg *sync.WaitGroup) {
 				// TODO: Multi-chain specific
 				var distanceFromHead uint64 = 13
 				meta, err := rpcClient.GetMetaData(opts.Globals.Chain, false)
+				progress := meta
+
+				// Quit early if we're testing... TODO: BOGUS - REMOVE THIS
+				tes := os.Getenv("TEST_END_SCRAPE")
+				if tes != "" {
+					val, err := strconv.ParseUint(tes, 10, 32)
+					fmt.Println("tes:", tes, "val:", val, "stage:", progress.Staging)
+					if (val != 0 && progress.Staging > val) || err != nil {
+						logger.Log(logger.Error, "HandleScrapeBlaze - Quitting early", err)
+						return
+					}
+				}
+
 				if err != nil {
 					log.Println("Error from node:", err)
 				} else {
