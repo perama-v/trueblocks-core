@@ -5,7 +5,7 @@ package scrapePkg
 // be found in the LICENSE file.
 
 import (
-//	"fmt"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -28,7 +28,7 @@ func (opts *ScrapeOptions) RunIndexScraper(wg *sync.WaitGroup) {
 			s.Pause()
 
 		} else {
-//fmt.Println("Calling in to blockScrape", opts.toCmdLine(), opts.getEnvStr())
+fmt.Println("Calling in to blockScrape", opts.toCmdLine(), opts.getEnvStr())
 			opts.Globals.PassItOn("blockScrape", opts.Globals.Chain, opts.toCmdLine(), opts.getEnvStr())
 			if s.Running {
 				// We sleep under two conditions
@@ -47,7 +47,7 @@ func (opts *ScrapeOptions) RunIndexScraper(wg *sync.WaitGroup) {
 				tes := os.Getenv("TEST_END_SCRAPE")
 				if tes != "" {
 					val, err := strconv.ParseUint(tes, 10, 32)
-//					fmt.Println("tes:", tes, "val:", val, "stage:", progress.Staging)
+					fmt.Println("tes:", tes, "val:", val, "stage:", progress.Staging)
 					if (val != 0 && progress.Staging > val) || err != nil {
 						logger.Log(logger.Error, "HandleScrapeBlaze - Quitting early", err)
 						return
