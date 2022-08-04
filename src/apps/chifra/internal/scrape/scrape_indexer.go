@@ -28,6 +28,7 @@ func (opts *ScrapeOptions) RunIndexScraper(wg *sync.WaitGroup) {
 			s.Pause()
 
 		} else {
+fmt.Println("Calling in to blockScrape", opts.toCmdLine(), opts.getEnvStr())
 			opts.Globals.PassItOn("blockScrape", opts.Globals.Chain, opts.toCmdLine(), opts.getEnvStr())
 			if s.Running {
 				// We sleep under two conditions
