@@ -15,7 +15,7 @@
 
 namespace qblocks {
 
-string_q manifestVersion = padLeft("", 64, '0');
+string_q manifestVersion = "0x81ae14ba68e372bc9bd4a295b844abd8e72b1de10fcd706e624647701d911da1";
 
 // Run make generate in order for this to take effect
 #define MAJOR 0
