@@ -11,7 +11,6 @@ package receiptsPkg
 // EXISTING_CODE
 import (
 	"net/http"
-	"os"
 
 	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/rpcClient"
 	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/types"
@@ -46,42 +45,42 @@ func (opts *ReceiptsOptions) ReceiptsInternal() (err error, handled bool) {
 
 	// EXISTING_CODE
 	// TODO: BOGUS THIS WORK IS INCOMPLETE -- ONLY WORKS IF THE ENV VAR IS EXPORTED
-	newnew := os.Getenv("NEW") == "true"
-	if !opts.Articulate && newnew {
-		defer opts.Globals.RenderFooter()
-		err = opts.Globals.RenderHeader(types.SimpleReceipt{}, &opts.Globals.Writer, opts.Globals.Format, opts.Globals.ApiMode, opts.Globals.NoHeader, true)
+	// newnew := os.Getenv("NEW") == "true"
+	// if !opts.Articulate && newnew {
+	defer opts.Globals.RenderFooter()
+	err = opts.Globals.RenderHeader(types.SimpleReceipt{}, &opts.Globals.Writer, opts.Globals.Format, opts.Globals.ApiMode, opts.Globals.NoHeader, true)
+	if err != nil {
+		return err, true
+	}
+
+	cnt := 0
+	for _, rng := range opts.TransactionIds {
+		txList, err := rng.ResolveTxs(opts.Globals.Chain)
 		if err != nil {
 			return err, true
 		}
-
-		cnt := 0
-		for _, rng := range opts.TransactionIds {
-			txList, err := rng.ResolveTxs(opts.Globals.Chain)
+		for _, tx := range txList {
+			// obj, err := rpcClient.GetTransactionReceipt(opts.Globals.Chain, uint64(tx.BlockNumber), uint64(tx.TransactionIndex), validate.IsBlockHash)
+			obj, err := rpcClient.GetTransactionReceipt(opts.Globals.Chain, uint64(tx.BlockNumber), uint64(tx.TransactionIndex))
 			if err != nil {
 				return err, true
 			}
-			for _, tx := range txList {
-				// obj, err := rpcClient.GetTransactionReceipt(opts.Globals.Chain, uint64(tx.BlockNumber), uint64(tx.TransactionIndex), validate.IsBlockHash)
-				obj, err := rpcClient.GetTransactionReceipt(opts.Globals.Chain, uint64(tx.BlockNumber), uint64(tx.TransactionIndex))
-				if err != nil {
-					return err, true
-				}
-				err = opts.Globals.RenderObject(obj, cnt == 0)
-				cnt++
-				if err != nil {
-					return err, true
-				}
+			err = opts.Globals.RenderObject(obj, cnt == 0)
+			cnt++
+			if err != nil {
+				return err, true
 			}
 		}
-		return nil, true
 	}
+	return nil, true
+	// }
 
 	if opts.Globals.ApiMode {
 		return nil, false
 	}
 
-	handled = true
-	err = opts.Globals.PassItOn("getReceipts", opts.Globals.Chain, opts.toCmdLine(), opts.getEnvStr())
+	// handled = true
+	// err = opts.Globals.PassItOn("getReceipts", opts.Globals.Chain, opts.toCmdLine(), opts.getEnvStr())
 	// EXISTING_CODE
 
 	return

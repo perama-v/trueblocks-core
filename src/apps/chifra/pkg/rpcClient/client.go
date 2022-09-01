@@ -20,6 +20,7 @@ import (
 	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
@@ -126,25 +127,70 @@ func TxHashFromHashAndId(provider, hash string, txId uint64) (string, error) {
 	return tx.Hash().Hex(), nil
 }
 
-// TxFromNumberAndId returns a actual transaction
-// func TxFromNumberAndId(provider string, blkNum, txId uint64) (ethTypes.Transaction, error) {
-// 	ec := GetClient(provider)
-// 	defer ec.Close()
+// TxFromNumberAndId returns an actual transaction
+func TxFromNumberAndId(chain string, blkNum, txId uint64) (ethTypes.Transaction, error) {
+	provider := config.GetRpcProvider(chain)
+	ec := GetClient(provider)
+	defer ec.Close()
 
-// 	block, err := ec.BlockByNumber(context.Background(), new(big.Int).SetUint64(blkNum))
-// 	if err != nil {
-// 		return ethTypes.Transaction{}, err
-// 	}
+	block, err := ec.BlockByNumber(context.Background(), new(big.Int).SetUint64(blkNum))
+	if err != nil {
+		return ethTypes.Transaction{}, err
+	}
 
-// 	tx, err := ec.TransactionInBlock(context.Background(), block.Hash(), uint(txId))
-// 	if err != nil {
-// 		return ethTypes.Transaction{}, err
-// 	}
+	tx, err := ec.TransactionInBlock(context.Background(), block.Hash(), uint(txId))
+	if err != nil {
+		return ethTypes.Transaction{}, err
+	}
 
-// 	return *tx, nil
-// }
+	return *tx, nil
+}
 
-func GetTransactionReceipt(provider string, bn uint64, txid uint64) (types.SimpleReceipt, error) {
+func GetTransactionReceipt(chain string, bn uint64, txid uint64) (receipt types.SimpleReceipt, err error) {
+	tx, err := TxFromNumberAndId(chain, bn, txid)
+	if err != nil {
+		return
+	}
+
+	provider := config.GetRpcProvider(chain)
+	ec := GetClient(provider)
+	defer ec.Close()
+
+	ethReceipt, err := ec.TransactionReceipt(context.Background(), tx.Hash())
+	if err != nil {
+		return
+	}
+	logs := []types.SimpleLog{}
+	for _, log := range ethReceipt.Logs {
+		logs = append(logs, types.SimpleLog{
+			Address:          log.Address,
+			LogIndex:         uint32(log.Index),
+			BlockNumber:      log.BlockNumber,
+			TransactionIndex: uint32(log.TxIndex),
+			Timestamp:        0, // FIXME
+			Topics:           log.Topics,
+			Data:             string(log.Data),
+			CompressedLog:    "", // FIXME
+		})
+	}
+	receipt = types.SimpleReceipt{
+		BlockHash:         ethReceipt.BlockHash,
+		BlockNumber:       ethReceipt.BlockNumber.Uint64(),
+		ContractAddress:   ethReceipt.ContractAddress,
+		CumulativeGasUsed: strconv.FormatUint(ethReceipt.CumulativeGasUsed, 10),
+		GasUsed:           ethReceipt.GasUsed,
+		Logs:              logs,
+		Status:            ethReceipt.Status,
+		IsError:           ethReceipt.Status == 0,
+		TransactionHash:   ethReceipt.TxHash,
+		TransactionIndex:  uint64(ethReceipt.TransactionIndex),
+		// From:
+		// To:
+		// EffectiveGasPrice
+	}
+
+	return
+
 	// TODO: BOGUS THIS WORK IS INCOMPLETE
 	// tx, err := TxFromNumberAndId(provider, bn, txid)
 	// if err != nil {
@@ -197,7 +243,7 @@ func GetTransactionReceipt(provider string, bn uint64, txid uint64) (types.Simpl
 	// 	ret.Logs = append(ret.Logs, log)
 	// }
 	// return ret, nil
-	return types.SimpleReceipt{GasUsed: 12}, nil
+	// return types.SimpleReceipt{GasUsed: 12}, nil
 }
 
 // TxHashFromNumberAndId returns a transaction's hash if it's a valid transaction
