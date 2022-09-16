@@ -34,8 +34,8 @@ func TestGetSpecials2(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(specials) != 31 {
-		t.Error("Wrong number of special blocks ", len(specials), ". Should have 31.")
+	if len(specials) != 33 {
+		t.Error("Wrong number of special blocks ", len(specials), ". Should have 33.")
 	}
 
 	for _, item := range specials {
