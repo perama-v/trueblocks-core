@@ -70,8 +70,8 @@ func TestGetSpecials(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(specials) != 31 {
-		t.Error("Wrong number of special blocks ", len(specials), ". Should have 31.")
+	if len(specials) != 33 {
+		t.Error("Wrong number of special blocks ", len(specials), ". Should have 33.")
 	}
 
 	// TODO: Turn off go testing that requires connection to a node
