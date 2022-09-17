@@ -5,8 +5,8 @@ TEST[DATE|TIME] MaxRecords:  5
 TEST[DATE|TIME] LogLevel:  10
 TEST[DATE|TIME] Chain:  rinkeby
 TEST[DATE|TIME] Format:  api
-WARNG[DATE|TIME] The --accounting option reports a spotPrice of one for all assets on non-mainnet chains.
-FATAL[DATE|TIME] 
+WARN[DATE|TIME] The --accounting option reports a spotPrice of one for all assets on non-mainnet chains.
+FATL[DATE|TIME] 
 
 	  The Unchained Index does not appear to be initialized. You must run 'chifra init'
 	  (and allow it to complete) or 'chifra scrape' before using this command.

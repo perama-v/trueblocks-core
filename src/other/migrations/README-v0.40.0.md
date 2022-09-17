@@ -87,7 +87,7 @@ jwt = "<your Pinata JWT key>"          # optional
 
 ```[toml]
 [version]
-current = "0.40.0-beta"
+current = "v0.40.0-beta"
 ```
 
 **Note:** If you're running your own ipfs gateways and pinning the index yourself, add an item called `ipfsGateway` and the appropriate keys as necessary.
@@ -153,7 +153,7 @@ If you have any other problems, please contact us in our discord.
 
 ## An important note on other chains
 
-Prior to version 0.40.0-beta, we only supported Ethereum mainnet. With this update we add support for the Gnosis chain and Sepolia testnet. If you've indexed other chains, you must remove that entire index and re-build it from scratch. (Sorry!) You may do this by removing the contents of `$indexPath/<chain>` and re-running `chifra scrape --chain <chain>`. Find `$indexPath` with `chifra status --terse`. We're truly sorry for the inconvienence. You will need to remove any monitor files as well.
+Prior to version v0.40.0-beta, we only supported Ethereum mainnet. With this update we add support for the Gnosis chain and Sepolia testnet. If you've indexed other chains, you must remove that entire index and re-build it from scratch. (Sorry!) You may do this by removing the contents of `$indexPath/<chain>` and re-running `chifra scrape --chain <chain>`. Find `$indexPath` with `chifra status --terse`. We're truly sorry for the inconvienence. You will need to remove any monitor files as well.
 
 ## Previous Migration
 

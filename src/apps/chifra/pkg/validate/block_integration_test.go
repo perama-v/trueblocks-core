@@ -10,9 +10,11 @@ import (
 
 	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/colors"
 	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/identifiers"
+	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/tslib"
 )
 
 func Test_BlockRanges(t *testing.T) {
+	tslib.EstablishTsFile(GetTestChain())
 	for _, item := range testBlocks {
 		if !item.enabled {
 			continue
