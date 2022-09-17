@@ -16,6 +16,10 @@ import (
 )
 
 func EstablishTsFile(chain string) error {
+	if chain == "non-tracing" { // A test-mode chain to test IsTracing
+		return nil
+	}
+
 	tsPath := config.GetPathToIndex(chain) + "ts.bin"
 	if file.FileExists(tsPath) {
 		return nil
@@ -43,8 +47,8 @@ func downloadCidToBinary(chain, cid, fileName string) error {
 	logger.Log(logger.InfoC, "Gateway:", gatewayUrl)
 	logger.Log(logger.InfoC, "CID:", cid)
 	logger.Log(logger.InfoC, "URL:", url.String())
-	logger.Log(logger.InfoC, "fileName:", fileName)
-	logger.Log(logger.Warning, colors.Yellow, "Downloading timestamp file. This make take a moment, please wait...", colors.Off)
+	msg := colors.Yellow + "Downloading timestamp file. This may take a moment, please wait..." + colors.Off
+	logger.Log(logger.Warning, msg)
 
 	//Get the response bytes from the url
 	response, err := http.Get(url.String())

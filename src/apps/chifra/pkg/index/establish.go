@@ -94,8 +94,7 @@ func IndexIsInitialized(chain string) error {
 	bloomZero := paths.NewCachePath(chain, paths.Index_Bloom)
 	path := bloomZero.GetFullPath("000000000-000000000")
 	if !file.FileExists(path) {
-		msg := "Path: " + bloomZero.GetFullPath("000000000-000000000") + IndexNotInitialized
-		msg = strings.Replace(msg, "{0}", "{v0.40.0-beta}", -1)
+		msg := strings.Replace(IndexNotInitialized, "{0}", "{v0.40.0-beta}", -1)
 		msg = strings.Replace(msg, "[{VERSION}]", version.LibraryVersion, -1)
 		// msg = strings.Replace(msg, "[{FILE}]", fileName, -1)
 		msg = strings.Replace(msg, "{", colors.Green, -1)
