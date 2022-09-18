@@ -9,17 +9,19 @@ package tslib
 
 import (
 	"testing"
+
+	"github.com/TrueBlocks/trueblocks-core/src/apps/chifra/pkg/utils"
 )
 
 func TestGetValueByName2(t *testing.T) {
-	value, err := FromNameToBn(GetTestChain(), "tangerine")
+	value, err := FromNameToBn(utils.GetTestChain(), "tangerine")
 	if err != nil {
 		t.Error("Block tangerine not found by name")
 	}
 	if value != 2463000 {
 		t.Errorf("Wrong value: %d", value)
 	}
-	_, err = FromNameToBn(GetTestChain(), "latest")
+	_, err = FromNameToBn(utils.GetTestChain(), "latest")
 	if err != nil {
 		t.Error("Latest block not found")
 	}
@@ -29,7 +31,7 @@ func TestGetValueByName2(t *testing.T) {
 }
 
 func TestGetSpecials2(t *testing.T) {
-	specials, err := GetSpecials(GetTestChain())
+	specials, err := GetSpecials(utils.GetTestChain())
 	if err != nil {
 		t.Error(err)
 	}

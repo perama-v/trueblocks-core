@@ -97,11 +97,6 @@ func GetPathToCache(chain string) string {
 	return newPath
 }
 
-func GetTestChain() string {
-	// This does not get customized per chain. We can only test against mainnet currently
-	return "mainnet"
-}
-
 // GetPathToCommands returns full path the the given tool
 func GetPathToCommands(part string) string {
 	usr, _ := user.Current()
